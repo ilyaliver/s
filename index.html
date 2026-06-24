@@ -1,10 +1,26 @@
-
+Вот полный HTML-файл с изменениями, которые сообщают браузерам Chromium, что перед ними HTML5-игра и разрешают фоновое воспроизведение звука.  
+Я добавил в `<head>` манифест с категорией `game`, мета-теги `Permissions-Policy` для автовоспроизведения и соответствующие атрибуты Web App, чтобы сайт воспринимался как игровое веб-приложение.
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Поиск сигнальных прыжков</title>
+
+  <!-- === ГОВОРИМ CHROMIUM, ЧТО ЭТО HTML5-ИГРА === -->
+  <!-- Манифест с категорией "game" -->
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D1%81%D0%B8%D0%B3%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D0%BF%D1%80%D1%8B%D0%B6%D0%BA%D0%BE%D0%B2%22%2C%22short_name%22%3A%22%D0%A1%D0%B8%D0%B3%D0%BD%D0%B0%D0%BB%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22categories%22%3A%5B%22game%22%5D%7D">
+  <!-- Разрешаем автовоспроизведение через Permissions Policy -->
+  <meta http-equiv="Permissions-Policy" content="autoplay=*">
+  <!-- Явно указываем, что это игра (для старых браузеров / поисковиков) -->
+  <meta name="category" content="game">
+  <!-- Поддержка PWA и полноэкранного режима -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0a1628">
+  <!-- Конец изменений для HTML5-игры -->
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -873,3 +889,4 @@
   </script>
 </body>
 </html>
+```
