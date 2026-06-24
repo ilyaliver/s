@@ -612,9 +612,14 @@
       const animStyle = delayMs > 0 ? `style="animation-delay:${delayMs}ms;"` : '';
       const animClass = delayMs > 0 ? 'animate-zoom-in' : '';
 
+      // Поддержка фонового изображения, если оно задано для карты
+      const bgStyle = card.bgImage 
+        ? `background-image: url('${card.bgImage}'); background-size: cover; background-position: center;` 
+        : '';
+
       return `
         <div class="result-card-wrap w-full mx-auto ${animClass}" ${animStyle}>
-          <div class="relative aspect-[2/3] rounded-tl-none rounded-br-2xl rounded-tr-xl rounded-bl-xl overflow-hidden border border-white/20 bg-gradient-to-b ${card.rank.color} flex flex-col justify-between p-1.5 shadow-[0_5px_15px_rgba(0,0,0,0.3)] group transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-white/50 w-full">
+          <div class="relative aspect-[2/3] rounded-tl-none rounded-br-2xl rounded-tr-xl rounded-bl-xl overflow-hidden border border-white/20 bg-gradient-to-b ${card.rank.color} flex flex-col justify-between p-1.5 shadow-[0_5px_15px_rgba(0,0,0,0.3)] group transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-white/50 w-full" style="${bgStyle}">
             <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none opacity-50"></div>
             ${isScam ? '<div class="absolute inset-0 bg-red-950/60 mix-blend-color-burn animate-pulse z-0"></div>' : ''}
             <div class="flex justify-between items-start z-10">
@@ -732,10 +737,27 @@
         }
       }
 
+      // Генерация названия и фона в зависимости от ранга
+      // (Прежний универсальный шаблон-заглушка закомментирован)
+      // const cardName = selectedCardRank.id === 'S_PLUS' ? 'Аномальный Код' : `Сигнал ${selectedCardRank.name}`;
+
+      let cardName = '';
+      let bgImage = '';
+
+      if (selectedCardRank.id === 'F') {
+        cardName = 'Заброшенная планета';
+        bgImage = 'https://ilyaliver.github.io/s/f_new.jpg';
+      } else if (selectedCardRank.id === 'S_PLUS') {
+        cardName = 'Аномальный Код';
+      } else {
+        cardName = `Сигнал ${selectedCardRank.name}`;
+      }
+
       return {
         id: Math.random().toString(36).substr(2, 9) + Date.now(),
         rank: selectedCardRank,
-        name: selectedCardRank.id === 'S_PLUS' ? 'Аномальный Код' : `Сигнал ${selectedCardRank.name}`,
+        name: cardName,
+        bgImage: bgImage
       };
     }
 
@@ -773,6 +795,7 @@
       renderShopGrid();
     }
 
+    // --- ЗАКРЫТЬ МАГАЗИН ---
     function closeShop() {
       modalShop.classList.add('hidden');
     }
@@ -786,7 +809,7 @@
         music.play().then(() => {
           cleanListeners();
         }).catch(() => {
-          // Браузер всё еще ожидает полноценного клика
+          // Браузер всё еще ожидает клика
         });
       };
 
