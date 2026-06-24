@@ -6,17 +6,12 @@
   <title>Поиск сигнальных прыжков</title>
 
   <!-- === ГОВОРИМ CHROMIUM, ЧТО ЭТО HTML5-ИГРА === -->
-  <!-- Манифест с категорией "game" -->
   <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D1%81%D0%B8%D0%B3%D0%BD%D0%B0%D0%BB%D1%8B%D0%BD%D1%8B%D1%85%20%D0%BF%D1%80%D1%8B%D0%B6%D0%BC%D0%BE%D0%B2%22%2C%22short_name%22%3A%22%D0%A1%D0%B8%D0%B3%D0%BD%D0%B0%D0%BB%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22categories%22%3A%5B%22game%22%5D%7D">
-  <!-- Разрешаем автовоспроизведение через Permissions Policy -->
   <meta http-equiv="Permissions-Policy" content="autoplay=*">
-  <!-- Явно указываем, что это игра (для старых браузеров / поисковиков) -->
   <meta name="category" content="game">
-  <!-- Поддержка PWA и полноэкранного режима -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0a1628">
-  <!-- Конец изменений для HTML5-игры -->
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -258,7 +253,6 @@
       <!-- Лого -->
       <div class="flex items-center gap-2 text-white drop-shadow-md shrink-0">
         <span class="text-xl md:text-3xl font-bold tracking-wide">Поиск</span>
-        <!-- Добавлено сообщение о Beta-версии -->
         <span class="text-[8px] md:text-[10px] text-white/50 ml-1 font-mono tracking-wider select-none" title="Приложение в стадии разработки, Beta-версия">Beta</span>
         <div id="btn-banner-rules"
           class="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold opacity-80 cursor-pointer hover:opacity-100 transition-opacity touch-active"
@@ -288,7 +282,7 @@
           <div class="w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br from-indigo-300 to-pink-300 flex items-center justify-center text-white text-[10px] shadow-sm shrink-0">✦</div>
           <span class="font-bold text-white ml-1.5 text-xs md:text-sm">0</span>
         </div>
-        <!-- Кристаллы -->
+        <!-- Кристаллы (Факелы) -->
         <div class="flex items-center bg-black/40 backdrop-blur-sm border border-white/15 rounded-full pr-1 pl-1 py-1 shadow-inner">
           <div class="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-cyan-300 text-base md:text-lg drop-shadow-md shrink-0">✧</div>
           <span id="ui-crystals" class="font-bold text-white ml-1 mr-2 md:mr-3 text-xs md:text-sm">0</span>
@@ -352,7 +346,7 @@
             </div>
           </div>
 
-          <!-- Плашка гаранта — адаптирована под мобильный (левый нижний угол) -->
+          <!-- Плашка гаранта -->
           <div class="absolute bottom-2 left-2 md:bottom-3 md:right-3 md:left-auto bg-[#1e2532]/80 backdrop-blur-md border border-white/10 text-white text-[9px] md:text-xs px-2.5 py-1.5 rounded flex flex-col gap-0.5 shadow-lg">
             <div class="flex justify-between gap-3">
               <span class="text-slate-300">EX:</span>
@@ -370,7 +364,7 @@
     <!-- НИЖНЯЯ ПАНЕЛЬ -->
     <div class="w-full px-3 md:px-8 py-3 md:py-4 flex flex-col gap-2 relative z-20 bottom-safe">
 
-      <!-- Кнопки поиска — приоритет, сверху на мобильном -->
+      <!-- Кнопки поиска -->
       <div class="flex gap-2 w-full justify-center">
         <button id="btn-pull-1"
           class="bg-[#f4efe8] hover:bg-white border-2 border-[#d3bc8e] text-[#4e5361] px-4 py-2.5 md:py-3 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-transform active:scale-95 flex flex-col items-center flex-1 max-w-[160px] md:max-w-[220px] group touch-active">
@@ -385,7 +379,7 @@
         </button>
       </div>
 
-      <!-- Вспомогательные кнопки — снизу, компактно -->
+      <!-- Вспомогательные кнопки -->
       <div class="flex items-center justify-between w-full gap-2">
         <div class="flex gap-2">
           <button id="btn-shop-bottom"
@@ -403,7 +397,7 @@
         </button>
       </div>
 
-      <!-- Предупреждение об использовании генеративных технологий -->
+      <!-- Предупреждение -->
       <p class="text-center text-[9px] md:text-[10px] text-slate-500/40 tracking-wider font-sans select-none pointer-events-none mt-1">
         Интерактивный продукт сгенерирован с использованием искусственного интеллекта
       </p>
@@ -525,7 +519,7 @@
   </div>
 
   <script>
-    // --- ДАННЫЕ ---
+    // --- ДАННЫЕ РАНГОВ ---
     const RANKS = [
       { id: 'EX',     name: 'EX',  stars: 6, color: 'from-[#ff4554] via-[#ffae34] to-[#7000ff]', text: 'text-white drop-shadow-[0_0_8px_rgba(255,174,52,0.9)] animate-pulse' },
       { id: 'SSS',    name: 'SSS', stars: 5, color: 'from-[#ff9c00] to-[#803e00]',                text: 'text-[#ffebc2] drop-shadow-[0_0_5px_rgba(255,156,0,0.8)]' },
@@ -539,6 +533,68 @@
       { id: 'E',      name: 'E',   stars: 2, color: 'from-[#a6acaf] to-[#3a4042]',                text: 'text-[#f6f7f7]' },
       { id: 'F',      name: 'F',   stars: 1, color: 'from-[#797d7f] to-[#2d3133]',                text: 'text-[#f0f1f2]' }
     ];
+
+    // --- ПУЛ УНИКАЛЬНЫХ КАРТ (ПОЛНАЯ БАЗА БЕЗ ЗАГЛУШЕК) ---
+    const UNIQUE_CARDS_POOL = {
+      EX: [
+        { cardId: 'ex_pulsar', name: 'Изумрудный Пульсар', bgImage: '' },
+        { cardId: 'ex_dawn', name: 'Сверхновая Заря', bgImage: '' },
+        { cardId: 'ex_quasar', name: 'Эхо Квазара', bgImage: '' }
+      ],
+      SSS: [
+        { cardId: 'sss_orion', name: 'Орион-9', bgImage: '' },
+        { cardId: 'sss_void', name: 'Спектр Пустоты', bgImage: '' },
+        { cardId: 'sss_horizon', name: 'Горизонт Событий', bgImage: '' }
+      ],
+      SS: [
+        { cardId: 'ss_andromeda', name: 'Глаз Андромеды', bgImage: '' },
+        { cardId: 'ss_wind', name: 'Солнечный Ветер', bgImage: '' },
+        { cardId: 'ss_storm', name: 'Магнитная Буря', bgImage: '' }
+      ],
+      S_PLUS: [
+        { cardId: 'splus_anomaly', name: 'Аномальный Код', bgImage: '' },
+        { cardId: 'splus_breach', name: 'Системный Взлом', bgImage: '' }
+      ],
+      S: [
+        { cardId: 's_chronos', name: 'Хронос', bgImage: '' },
+        { cardId: 's_nebula', name: 'Туманность Небула', bgImage: '' },
+        { cardId: 's_centauri', name: 'Альфа Центавра', bgImage: '' }
+      ],
+      A: [
+        { cardId: 'a_io', name: 'Спутник Ио', bgImage: '' },
+        { cardId: 'a_europa', name: 'Ледяная Европа', bgImage: '' },
+        { cardId: 'a_callisto', name: 'Каллисто', bgImage: '' },
+        { cardId: 'a_ganymede', name: 'Ганимед', bgImage: '' }
+      ],
+      B: [
+        { cardId: 'b_vega', name: 'Звезда Вега', bgImage: '' },
+        { cardId: 'b_sirius', name: 'Сириус А', bgImage: '' },
+        { cardId: 'b_altair', name: 'Альтаир', bgImage: '' },
+        { cardId: 'b_capella', name: 'Капелла', bgImage: '' }
+      ],
+      C: [
+        { cardId: 'c_titan', name: 'Спутник Титан', bgImage: '' },
+        { cardId: 'c_enceladus', name: 'Энцелад', bgImage: '' },
+        { cardId: 'c_mimas', name: 'Мимас', bgImage: '' },
+        { cardId: 'c_rhea', name: 'Рея', bgImage: '' }
+      ],
+      D: [
+        { cardId: 'd_phobos', name: 'Фобос', bgImage: '' },
+        { cardId: 'd_deimos', name: 'Деймос', bgImage: '' },
+        { cardId: 'd_charon', name: 'Харон', bgImage: '' },
+        { cardId: 'd_ceres', name: 'Церера', bgImage: '' }
+      ],
+      E: [
+        { cardId: 'e_dust', name: 'Космическая Пыль', bgImage: 'https://ilyaliver.github.io/s/e_new.jpg' },
+        { cardId: 'e_shard', name: 'Осколок Метеорита', bgImage: 'https://ilyaliver.github.io/s/e_new.jpg' },
+        { cardId: 'e_sat', name: 'Спутник Связи', bgImage: 'https://ilyaliver.github.io/s/e_new.jpg' }
+      ],
+      F: [
+        { cardId: 'f_station', name: 'Заброшенная Станция', bgImage: 'https://ilyaliver.github.io/s/f_new.jpg' },
+        { cardId: 'f_debris', name: 'Обломки Обшивки', bgImage: 'https://ilyaliver.github.io/s/f_new.jpg' },
+        { cardId: 'f_engine', name: 'Старый Двигатель', bgImage: 'https://ilyaliver.github.io/s/f_new.jpg' }
+      ]
+    };
 
     const PULL_COST     = 160;
     const S_PITY_LIMIT  = 50;
@@ -578,7 +634,7 @@
     // --- СОСТОЯНИЕ ---
     const saved = loadProgress();
     let crystals          = saved ? saved.crystals          : 999999999;
-    let inventory         = saved ? saved.inventory         : [];
+    let inventory         = saved ? saved.inventory         : []; // Хранит: { cardId, level, constellation, rankId, name, bgImage }
     let sPityCounter      = saved ? saved.sPityCounter      : 0;
     let exPityCounter     = saved ? saved.exPityCounter     : 0;
     let guaranteedExNext  = saved ? saved.guaranteedExNext  : false;
@@ -602,24 +658,42 @@
 
     // --- ГЕНЕРАЦИЯ КАРТЫ ---
     function generateCardHTML(card, delayMs = 0) {
-      const isScam = card.rank.id === 'S_PLUS';
-      const starsHTML = Array(card.rank.stars).fill('<span class="drop-shadow-[0_0_3px_#ffcc00]">✦</span>').join('');
+      const rank = RANKS.find(r => r.id === card.rankId);
+      if (!rank) return '';
+      const isScam = card.rankId === 'S_PLUS';
+      const starsHTML = Array(rank.stars).fill('<span class="drop-shadow-[0_0_3px_#ffcc00]">✦</span>').join('');
       const animStyle = delayMs > 0 ? `style="animation-delay:${delayMs}ms;"` : '';
       const animClass = delayMs > 0 ? 'animate-zoom-in' : '';
 
-      // Поддержка фонового изображения, если оно задано для карты
       const bgStyle = card.bgImage 
         ? `background-image: url('${card.bgImage}'); background-size: cover; background-position: center;` 
         : '';
 
+      const isMaxed = card.constellation === 5 && card.level === 25;
+
       return `
         <div class="result-card-wrap w-full mx-auto ${animClass}" ${animStyle}>
-          <div class="relative aspect-[2/3] rounded-tl-none rounded-br-2xl rounded-tr-xl rounded-bl-xl overflow-hidden border border-white/20 bg-gradient-to-b ${card.rank.color} flex flex-col justify-between p-1.5 shadow-[0_5px_15px_rgba(0,0,0,0.3)] group transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-white/50 w-full" style="${bgStyle}">
+          <div class="relative aspect-[2/3] rounded-tl-none rounded-br-2xl rounded-tr-xl rounded-bl-xl overflow-hidden border border-white/20 bg-gradient-to-b ${rank.color} flex flex-col justify-between p-1.5 shadow-[0_5px_15px_rgba(0,0,0,0.3)] group transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl hover:border-white/50 w-full" style="${bgStyle}">
             <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none opacity-50"></div>
             ${isScam ? '<div class="absolute inset-0 bg-red-950/60 mix-blend-color-burn animate-pulse z-0"></div>' : ''}
+            
+            <!-- Индикатор уровня и созвездия (C1-C5, Lvl 1-25) -->
+            <div class="absolute top-1 right-1 px-1 py-0.5 text-[8px] font-bold rounded bg-slate-900/80 text-[#ece5d8] border border-white/10 z-10">
+              C${card.constellation} · ${card.level} ур.
+            </div>
+
+            <!-- Индикатор утилизации избыточного дубликата -->
+            ${card.recycled ? `
+              <div class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-20 text-center p-2">
+                <span class="text-xs font-black text-red-400 uppercase tracking-wider">Максимум</span>
+                <span class="text-[9px] text-slate-300">Утилизация</span>
+                <span class="text-cyan-400 font-bold text-xs mt-1">+1600 ✧</span>
+              </div>
+            ` : ''}
+
             <div class="flex justify-between items-start z-10">
-              <div class="px-1.5 py-0.5 text-[10px] font-black tracking-widest rounded bg-black/50 backdrop-blur-md ${card.rank.text} border border-white/10">
-                ${card.rank.name}
+              <div class="px-1.5 py-0.5 text-[10px] font-black tracking-widest rounded bg-black/50 backdrop-blur-md ${rank.text} border border-white/10">
+                ${rank.name}
               </div>
             </div>
             <div class="w-full bg-black/60 border border-white/10 backdrop-blur-md rounded-lg p-1 z-10 space-y-0.5 flex flex-col items-center">
@@ -682,10 +756,51 @@
       }
     }
 
-    // --- ЗАКРЫТЬ ИНВЕНТАРЬ ---
     function closeInventory() {
       viewInventory.classList.add('hidden');
       viewGacha.classList.remove('hidden');
+    }
+
+    // --- МЕХАНИКА ОБНОВЛЕНИЯ ИЛИ ДОБАВЛЕНИЯ КАРТЫ С УЧЕТОМ ДУБЛИКАТОВ ---
+    function registerCardToInventory(cardTemplate) {
+      const existing = inventory.find(c => c.cardId === cardTemplate.cardId);
+
+      if (!existing) {
+        // Новая карта: стартует с созвездием C1 и уровнем 1
+        const newCard = {
+          cardId: cardTemplate.cardId,
+          name: cardTemplate.name,
+          bgImage: cardTemplate.bgImage,
+          rankId: cardTemplate.rankId,
+          level: 1,
+          constellation: 1
+        };
+        inventory.unshift(newCard); // Добавляем в начало списка
+        return { ...newCard, recycled: false };
+      } else {
+        // Карта уже существует (дубликат)
+        if (existing.constellation === 5 && existing.level === 25) {
+          // Максимальная прокачка (C5 и 25 уровень) достигнута. Избыточные уничтожаются.
+          crystals += 1600; // Начисление компенсации
+          return { ...existing, recycled: true };
+        }
+
+        // Повышаем уровень карты за счет дубликата
+        existing.level += 1;
+
+        // Каждые 25 уровней повышается созвездие с C1 до C5
+        if (existing.level > 25) {
+          if (existing.constellation < 5) {
+            existing.level = 1;
+            existing.constellation += 1;
+          } else {
+            // Предохранитель на случай превышения лимитов
+            existing.level = 25;
+          }
+        }
+
+        return { ...existing, recycled: false };
+      }
     }
 
     // --- МЕХАНИКА ТЯГИ ---
@@ -732,28 +847,15 @@
         }
       }
 
-      // Генерация названия и фона в зависимости от ранга
-      let cardName = '';
-      let bgImage = '';
-
-      if (selectedCardRank.id === 'F') {
-        cardName = 'Заброшенная планета';
-        bgImage = 'https://ilyaliver.github.io/s/f_new.jpg';
-      } else if (selectedCardRank.id === 'E') {
-        cardName = 'Космический мусор';
-        bgImage = 'https://ilyaliver.github.io/s/e_new.jpg';
-      } else if (selectedCardRank.id === 'S_PLUS') {
-        cardName = 'Аномальный Код';
-      } else {
-        /* Универсальный шаблон-заглушка для остальных рангов */
-        cardName = `Сигнал ${selectedCardRank.name}`;
-      }
+      // Выбор случайной уникальной карты из пула соответствующего ранга
+      const targetPool = UNIQUE_CARDS_POOL[selectedCardRank.id];
+      const randomTemplate = targetPool[Math.floor(Math.random() * targetPool.length)];
 
       return {
-        id: Math.random().toString(36).substr(2, 9) + Date.now(),
-        rank: selectedCardRank,
-        name: cardName,
-        bgImage: bgImage
+        cardId: randomTemplate.cardId,
+        name: randomTemplate.name,
+        bgImage: randomTemplate.bgImage,
+        rankId: selectedCardRank.id
       };
     }
 
@@ -766,13 +868,24 @@
       modalLoading.classList.remove('hidden');
 
       setTimeout(() => {
-        const newCards = [];
-        for (let i = 0; i < amount; i++) newCards.push(pullSingleCard());
-        newCards.sort((a, b) => RANKS.findIndex(r => r.id === a.rank.id) - RANKS.findIndex(r => r.id === b.rank.id));
-        inventory = [...newCards, ...inventory];
+        const pullSnapshots = [];
+        for (let i = 0; i < amount; i++) {
+          const cardTemplate = pullSingleCard();
+          // Проводим регистрацию в инвентаре в реальном времени
+          const updatedState = registerCardToInventory(cardTemplate);
+          pullSnapshots.push(updatedState);
+        }
+        
+        // Сортируем отображение в результатах по убыванию редкости
+        pullSnapshots.sort((a, b) => {
+          const rA = RANKS.findIndex(r => r.id === a.rankId);
+          const rB = RANKS.findIndex(r => r.id === b.rankId);
+          return rA - rB;
+        });
+
         updateUI();
         modalLoading.classList.add('hidden');
-        showResultModal(newCards);
+        showResultModal(pullSnapshots);
       }, 600);
     }
 
@@ -791,7 +904,6 @@
       renderShopGrid();
     }
 
-    // --- ЗАКРЫТЬ МАГАЗИН ---
     function closeShop() {
       modalShop.classList.add('hidden');
     }
@@ -804,9 +916,7 @@
       const startPlay = () => {
         music.play().then(() => {
           cleanListeners();
-        }).catch(() => {
-          // Браузер всё еще ожидает клика
-        });
+        }).catch(() => {});
       };
 
       const cleanListeners = () => {
