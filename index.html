@@ -569,7 +569,7 @@
     function saveProgress() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ crystals, inventory, sPityCounter, exPityCounter, guaranteedExNext }));
       const btnReset = document.getElementById('btn-reset-save');
-      const hasDelta = crystals !== 16000 || inventory.length > 0;
+      const hasDelta = crystals !== 999999999 || inventory.length > 0;
       btnReset.classList.toggle('hidden', !hasDelta);
     }
 
@@ -582,7 +582,7 @@
 
     // --- СОСТОЯНИЕ ---
     const saved = loadProgress();
-    let crystals          = saved ? saved.crystals          : 16000;
+    let crystals          = saved ? saved.crystals          : 999999999;
     let inventory         = saved ? saved.inventory         : [];
     let sPityCounter      = saved ? saved.sPityCounter      : 0;
     let exPityCounter     = saved ? saved.exPityCounter     : 0;
