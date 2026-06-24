@@ -534,7 +534,7 @@
       { id: 'F',      name: 'F',   stars: 1, color: 'from-[#797d7f] to-[#2d3133]',                text: 'text-[#f0f1f2]' }
     ];
 
-    // --- ПУЛ УНИКАЛЬНЫХ КАРТ (ПОЛНАЯ БАЗА БЕЗ ЗАГЛУШЕК) ---
+    // --- ПУЛ УНИКАЛЬНЫХ КАРТ ---
     const UNIQUE_CARDS_POOL = {
       EX: [
         { cardId: 'ex_pulsar', name: 'Изумрудный Пульсар', bgImage: '' },
@@ -548,7 +548,7 @@
       ],
       SS: [
         { cardId: 'ss_andromeda', name: 'Глаз Андромеды', bgImage: '' },
-        { cardId: 'ss_wind', name: 'Солнечный Ветер', bgImage: '' },
+        { cardId: 'ss_wind', name: 'Sol-Ветер', bgImage: '' },
         { cardId: 'ss_storm', name: 'Магнитная Буря', bgImage: '' }
       ],
       S_PLUS: [
@@ -615,7 +615,7 @@
       { id: 'pm3', name: 'Туннельный Поток',      icon: '🌌' }
     ];
 
-    // --- СОХРАНЕНИЕ ---
+    // --- СОХРАНЕНИЕ И ЗАГРУЗКА ---
     const STORAGE_KEY = 'warpSim_GenshinStyle_Save';
 
     function loadProgress() {
@@ -634,10 +634,63 @@
     // --- СОСТОЯНИЕ ---
     const saved = loadProgress();
     let crystals          = saved ? saved.crystals          : 999999999;
-    let inventory         = saved ? saved.inventory         : []; // Хранит: { cardId, level, constellation, rankId, name, bgImage }
+    let inventory         = saved ? saved.inventory         : []; 
     let sPityCounter      = saved ? saved.sPityCounter      : 0;
     let exPityCounter     = saved ? saved.exPityCounter     : 0;
     let guaranteedExNext  = saved ? saved.guaranteedExNext  : false;
+
+    // --- ФУНКЦИЯ ДЕДУПЛИКАЦИИ И МИГРАЦИИ НАКОПЛЕННЫХ ДАННЫХ ---
+    function sanitizeAndDeDuplicateInventory() {
+      const cleanInventory = [];
+      for (const item of inventory) {
+        let cardId = item.cardId;
+        let rankId = item.rankId || (item.rank ? item.rank.id : 'F');
+        let name = item.name;
+        let bgImage = item.bgImage || '';
+        
+        // Миграция старого формата данных, если отсутствует cardId
+        if (!cardId) {
+          const pool = UNIQUE_CARDS_POOL[rankId] || UNIQUE_CARDS_POOL['F'];
+          const matchedTemplate = pool.find(p => p.name === name) || pool[0];
+          cardId = matchedTemplate.cardId;
+          name = matchedTemplate.name;
+          bgImage = matchedTemplate.bgImage;
+        }
+        
+        const existing = cleanInventory.find(c => c.cardId === cardId);
+        if (existing) {
+          // Объединяем полученный уровень
+          existing.level += (item.level || 1);
+          if (item.constellation && item.constellation > 1) {
+            existing.constellation += (item.constellation - 1);
+          }
+          
+          // Нормализуем по 25 уровней на уровень созвездия
+          while (existing.level > 25) {
+            if (existing.constellation < 5) {
+              existing.level -= 25;
+              existing.constellation += 1;
+            } else {
+              existing.level = 25;
+              break;
+            }
+          }
+        } else {
+          cleanInventory.push({
+            cardId: cardId,
+            name: name,
+            bgImage: bgImage,
+            rankId: rankId,
+            level: item.level || 1,
+            constellation: item.constellation || 1
+          });
+        }
+      }
+      inventory = cleanInventory;
+    }
+
+    // Запускаем очистку сразу при инициализации
+    sanitizeAndDeDuplicateInventory();
 
     // --- ДОМ ---
     const elCrystals    = document.getElementById('ui-crystals');
@@ -668,8 +721,6 @@
       const bgStyle = card.bgImage 
         ? `background-image: url('${card.bgImage}'); background-size: cover; background-position: center;` 
         : '';
-
-      const isMaxed = card.constellation === 5 && card.level === 25;
 
       return `
         <div class="result-card-wrap w-full mx-auto ${animClass}" ${animStyle}>
@@ -752,7 +803,16 @@
       } else {
         invEmpty.classList.add('hidden');
         invGrid.classList.remove('hidden');
-        invGrid.innerHTML = inventory.map(c => generateCardHTML(c)).join('');
+        
+        // Сортируем архив по рангу (от EX до F) и по имени для идеального порядка
+        const sortedInventory = [...inventory].sort((a, b) => {
+          const rA = RANKS.findIndex(r => r.id === a.rankId);
+          const rB = RANKS.findIndex(r => r.id === b.rankId);
+          if (rA !== rB) return rA - rB;
+          return a.name.localeCompare(b.name);
+        });
+        
+        invGrid.innerHTML = sortedInventory.map(c => generateCardHTML(c)).join('');
       }
     }
 
@@ -794,7 +854,6 @@
             existing.level = 1;
             existing.constellation += 1;
           } else {
-            // Предохранитель на случай превышения лимитов
             existing.level = 25;
           }
         }
@@ -873,7 +932,8 @@
           const cardTemplate = pullSingleCard();
           // Проводим регистрацию в инвентаре в реальном времени
           const updatedState = registerCardToInventory(cardTemplate);
-          pullSnapshots.push(updatedState);
+          // Копируем состояние, чтобы избежать побочных эффектов при сортировке отображения
+          pullSnapshots.push({ ...updatedState });
         }
         
         // Сортируем отображение в результатах по убыванию редкости
