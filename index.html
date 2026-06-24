@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -214,10 +213,10 @@
   </style>
 </head>
 
-  <audio id="bg-music" src="/s/music.mp3" autoplay loop></audio>
-
-  
 <body class="min-h-[100dvh] bg-gradient-to-br from-[#030712] via-[#0a1628] to-[#0d0a1a] text-slate-800 font-sans antialiased relative overflow-x-hidden selection:bg-amber-500/30 flex flex-col m-0">
+
+  <!-- Аудиоэлемент для фоновой музыки -->
+  <audio id="bg-music" src="https://ilyaliver.github.io/s/music.mp3" autoplay loop></audio>
 
   <!-- Космическое звёздное поле -->
   <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
@@ -766,6 +765,30 @@
       modalShop.classList.add('hidden');
     }
 
+    // --- ИНИЦИАЛИЗАЦИЯ И ОБХОД БЛОКИРОВКИ АВТОПРОИГРЫВАНИЯ ---
+    function initMusicAutoplay() {
+      const music = document.getElementById('bg-music');
+      if (!music) return;
+
+      const startPlay = () => {
+        music.play().then(() => {
+          cleanListeners();
+        }).catch(() => {
+          // Браузер всё еще ожидает полноценного клика
+        });
+      };
+
+      const cleanListeners = () => {
+        ['click', 'touchstart', 'mousemove', 'keydown', 'pointerdown'].forEach(evt => {
+          document.removeEventListener(evt, startPlay);
+        });
+      };
+
+      ['click', 'touchstart', 'mousemove', 'keydown', 'pointerdown'].forEach(evt => {
+        document.addEventListener(evt, startPlay, { passive: true });
+      });
+    }
+
     function renderShopGrid() {
       shopContent.innerHTML = `
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 max-w-5xl mx-auto pb-2">
@@ -888,6 +911,7 @@
     });
 
     updateUI();
+    initMusicAutoplay();
   </script>
 </body>
 </html>
