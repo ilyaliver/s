@@ -400,6 +400,11 @@
           Сброс
         </button>
       </div>
+
+      <!-- Предупреждение об использовании генеративных технологий -->
+      <p class="text-center text-[9px] md:text-[10px] text-slate-500/40 tracking-wider font-sans select-none pointer-events-none mt-1">
+        Интерактивный продукт сгенерирован с использованием искусственного интеллекта
+      </p>
     </div>
   </div>
 
@@ -677,6 +682,7 @@
       }
     }
 
+    // --- ЗАКРЫТЬ ИНВЕНТАРЬ ---
     function closeInventory() {
       viewInventory.classList.add('hidden');
       viewGacha.classList.remove('hidden');
