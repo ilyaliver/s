@@ -518,6 +518,26 @@
     </div>
   </div>
 
+  <!-- ОВЕРЛЕЙ УСПЕШНОЙ ЗАГРУЗКИ -->
+  <div id="modal-welcome" class="fixed inset-0 z-[60] bg-[#06080c]/80 flex items-center justify-center backdrop-blur-sm animate-fade-in">
+    <div class="bg-[#121722] border border-[#d3bc8e]/30 rounded-2xl w-11/12 max-w-sm flex flex-col shadow-[0_0_30px_rgba(211,188,142,0.15)] animate-zoom-in p-6 text-center relative overflow-hidden">
+      <!-- Декоративная линия -->
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#d3bc8e] to-transparent"></div>
+      
+      <!-- Иконка галочки -->
+      <div class="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30">
+        <svg class="w-7 h-7 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+      </div>
+      
+      <h2 class="text-[#ece5d8] text-lg md:text-xl font-bold uppercase tracking-widest mb-2">Успешно загружено</h2>
+      <p class="text-slate-400 text-sm mb-6 font-mono tracking-widest">successfully</p>
+      
+      <button id="btn-close-welcome" class="bg-gradient-to-r from-[#ece5d8] to-[#d3bc8e] hover:brightness-110 text-slate-900 px-8 py-3 rounded-full font-black uppercase tracking-widest text-xs transition-all shadow-md touch-active w-full">
+        ОК
+      </button>
+    </div>
+  </div>
+
   <script>
     // --- ДАННЫЕ РАНГОВ ---
     const RANKS = [
@@ -1090,6 +1110,15 @@
     // --- ЗАКРЫТИЕ МОДАЛОК по тапу на overlay ---
     modalShop.addEventListener('click', e => { if (e.target === modalShop) closeShop(); });
     modalRules.addEventListener('click', e => { if (e.target === modalRules) document.getElementById('modal-rules').classList.add('hidden'); });
+    
+    // Закрытие нового окна приветствия
+    const modalWelcome = document.getElementById('modal-welcome');
+    document.getElementById('btn-close-welcome').addEventListener('click', () => {
+      modalWelcome.classList.add('hidden');
+    });
+    modalWelcome.addEventListener('click', e => {
+      if (e.target === modalWelcome) modalWelcome.classList.add('hidden');
+    });
 
     // --- ПРИВЯЗКА СОБЫТИЙ ---
     document.getElementById('btn-inventory').addEventListener('click', openInventory);
