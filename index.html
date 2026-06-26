@@ -397,10 +397,10 @@
         </button>
       </div>
 
-      <!-- Предупреждение -->
-      <p class="text-center text-[9px] md:text-[10px] text-slate-500/40 tracking-wider font-sans select-none pointer-events-none mt-1">
+      <!-- Предупреждение (Теперь кнопка) -->
+      <button id="btn-ai-credits" class="w-full text-center text-[9px] md:text-[10px] text-slate-500/40 hover:text-slate-400/80 transition-colors tracking-wider font-sans select-none mt-1 focus:outline-none">
         Интерактивный продукт сгенерирован с использованием искусственного интеллекта
-      </p>
+      </button>
     </div>
   </div>
 
@@ -505,6 +505,51 @@
         <button id="btn-close-rules"
           class="bg-gradient-to-r from-[#ece5d8] to-[#d3bc8e] hover:brightness-110 text-slate-900 px-8 py-2.5 rounded-full font-black uppercase tracking-widest text-xs transition-all shadow-md touch-active">
           ОК
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ОВЕРЛЕЙ ИНФОРМАЦИИ ОБ ИИ -->
+  <div id="modal-ai-credits" class="fixed inset-0 z-[70] bg-[#06080c]/90 flex items-end md:items-center justify-center backdrop-blur-md animate-fade-in hidden">
+    <div class="bg-[#121722] border border-[#d3bc8e]/30 rounded-t-3xl md:rounded-2xl w-full max-w-2xl flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.8)] animate-slide-up"
+         style="max-height: 90dvh; padding-bottom: env(safe-area-inset-bottom, 0px)">
+      <div class="flex justify-center pt-2.5 pb-1 md:hidden">
+        <div class="w-10 h-1 bg-white/20 rounded-full"></div>
+      </div>
+      <div class="bg-[#1a2130] border-b border-[#d3bc8e]/20 px-5 py-3 md:rounded-t-2xl shrink-0">
+        <h2 class="text-base font-bold uppercase tracking-widest text-[#ece5d8] flex items-center gap-3">
+          <span class="w-1.5 h-5 bg-[#d3bc8e] rounded-full"></span> Архитектура нейросетей
+        </h2>
+      </div>
+      <div class="p-4 md:p-6 text-slate-300 text-sm overflow-y-auto custom-scrollbar scroll-smooth-ios flex flex-col gap-4 leading-relaxed">
+        <p class="text-xs md:text-sm text-slate-400">Данный проект является результатом синергии нескольких передовых моделей искусственного интеллекта:</p>
+        
+        <div class="bg-black/20 p-3 md:p-4 rounded-lg border border-white/5 shadow-inner">
+          <h3 class="font-bold text-[#d3bc8e] mb-2 text-xs md:text-sm flex items-center gap-2">
+            <span class="text-lg">💻</span> Программная часть и логика
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed">В проектировании архитектуры приложения, написании алгоритмов и создании основной кодовой базы принимали участие ведущие большие языковые модели (LLM). В первую очередь использовались возможности <strong class="text-slate-200">Claude</strong>, <strong class="text-slate-200">Gemini</strong> и <strong class="text-slate-200">DeepSeek</strong>.</p>
+        </div>
+
+        <div class="bg-black/20 p-3 md:p-4 rounded-lg border border-white/5 shadow-inner">
+          <h3 class="font-bold text-[#d3bc8e] mb-2 text-xs md:text-sm flex items-center gap-2">
+            <span class="text-lg">🎨</span> Визуальное оформление и UI/UX
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Проектирование пользовательского интерфейса, структуры и генерация CSS-кода выполнены моделью <strong class="text-slate-200">Gemini</strong>. Графические ассеты и прочие визуальные элементы были сгенерированы с использованием визуальной архитектуры <strong class="text-slate-200">Gemini (модель Nano Banana)</strong>.</p>
+        </div>
+
+        <div class="bg-black/20 p-3 md:p-4 rounded-lg border border-white/5 shadow-inner">
+          <h3 class="font-bold text-[#d3bc8e] mb-2 text-xs md:text-sm flex items-center gap-2">
+            <span class="text-lg">🎵</span> Фоновое аудио-сопровождение
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Атмосферная музыкальная композиция, воспроизводящаяся на фоне, полностью синтезирована с применением генеративных алгоритмов нейросети <strong class="text-slate-200">Suno.AI</strong>.</p>
+        </div>
+      </div>
+      <div class="p-3 md:p-4 border-t border-[#d3bc8e]/20 flex justify-end bg-[#1a2130] md:rounded-b-2xl shrink-0">
+        <button id="btn-close-ai-credits"
+          class="bg-gradient-to-r from-[#ece5d8] to-[#d3bc8e] hover:brightness-110 text-slate-900 px-8 py-2.5 rounded-full font-black uppercase tracking-widest text-xs transition-all shadow-md touch-active">
+          Закрыть
         </button>
       </div>
     </div>
@@ -719,6 +764,7 @@
     const modalShop     = document.getElementById('modal-shop');
     const shopContent   = document.getElementById('shop-content');
     const modalRules    = document.getElementById('modal-rules');
+    const modalAiCredits= document.getElementById('modal-ai-credits'); // Добавлено
     const modalLoading  = document.getElementById('modal-loading');
     const modalResult   = document.getElementById('modal-result');
     const resultGrid    = document.getElementById('result-grid');
@@ -1110,6 +1156,7 @@
     // --- ЗАКРЫТИЕ МОДАЛОК по тапу на overlay ---
     modalShop.addEventListener('click', e => { if (e.target === modalShop) closeShop(); });
     modalRules.addEventListener('click', e => { if (e.target === modalRules) document.getElementById('modal-rules').classList.add('hidden'); });
+    modalAiCredits.addEventListener('click', e => { if (e.target === modalAiCredits) modalAiCredits.classList.add('hidden'); });
     
     // Закрытие нового окна приветствия
     const modalWelcome = document.getElementById('modal-welcome');
@@ -1135,6 +1182,10 @@
 
     document.getElementById('btn-banner-rules').addEventListener('click', () => document.getElementById('modal-rules').classList.remove('hidden'));
     document.getElementById('btn-close-rules').addEventListener('click', () => document.getElementById('modal-rules').classList.add('hidden'));
+
+    // Открытие и закрытие информации об ИИ
+    document.getElementById('btn-ai-credits').addEventListener('click', () => modalAiCredits.classList.remove('hidden'));
+    document.getElementById('btn-close-ai-credits').addEventListener('click', () => modalAiCredits.classList.add('hidden'));
 
     document.getElementById('btn-reset-save').addEventListener('click', resetProgress);
 
