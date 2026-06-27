@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://card_item_scene"]
+
+[ext_resource type="Script" path="res://scripts/card_item.gd" id="1_card"]
+
+[node name="CardItem" type="PanelContainer"]
+layout_mode = 2
+script = ExtResource("1_card")
+
+[node name="BgTexture" type="TextureRect" parent="."]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="RankLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "EX"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="StarsLabel" type="Label" parent="VBoxContainer/CenterContainer"]
+layout_mode = 2
+text = "******"
+horizontal_alignment = 1
+
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Card Name"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="LevelLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "C1 - Lvl 1"
+horizontal_alignment = 1
