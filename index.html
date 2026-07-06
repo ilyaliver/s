@@ -636,9 +636,9 @@
 
     // Группы рангов для определения типа анимации
     const RANK_TIERS = {
-      EX: 'gold', SSS: 'gold', SS: 'gold', S_PLUS: 'gold', S: 'gold',
-      A: 'purple', B: 'purple', C: 'purple',
-      D: 'white', E: 'white', F: 'white'
+      EX: 'gold', S_PLUS: 'gold', 
+      SSS: 'purple', SS: 'purple', S: 'purple', A: 'purple',
+      B: 'white', C: 'white', D: 'white', E: 'white', F: 'white'
     };
 
     // --- ПУЛ УНИКАЛЬНЫХ КАРТ ---
@@ -714,7 +714,7 @@
     }
 
     function saveProgress() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ crystals, inventory, sPityCounter, exPityCounter, guaranteedExNext }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ crystals, inventory, sPityCounter, exPityCounter, guaranteedExNext, aPityCounter }));
       const btnReset = document.getElementById('btn-reset-save');
       const hasDelta = crystals !== 999999999 || inventory.length > 0;
       btnReset.classList.toggle('hidden', !hasDelta);
@@ -727,6 +727,7 @@
     let sPityCounter      = saved ? saved.sPityCounter      : 0;
     let exPityCounter     = saved ? saved.exPityCounter     : 0;
     let guaranteedExNext  = saved ? saved.guaranteedExNext  : false;
+    let aPityCounter      = (saved && saved.aPityCounter !== undefined) ? saved.aPityCounter : 0;
 
     // --- ФУНКЦИЯ ДЕДУПЛИКАЦИИ И МИГРАЦИИ НАКОПЛЕННЫХ ДАННЫХ ---
     function sanitizeAndDeDuplicateInventory() {
@@ -960,6 +961,7 @@
 
     // --- МЕХАНИКА ТЯГИ ---
     function pullSingleCard() {
+      aPityCounter++;
       sPityCounter++;
       exPityCounter++;
       let selectedCardRank = null;
@@ -977,11 +979,8 @@
             guaranteedExNext = true;
           }
         }
-        exPityCounter = 0;
-        sPityCounter  = 0;
       } else if (sPityCounter >= S_PITY_LIMIT) {
         selectedCardRank = RANKS.find(r => r.id === 'S');
-        sPityCounter = 0;
       } else {
         const rand = Math.random() * 100;
         let cum = 0;
@@ -993,13 +992,25 @@
         }
         if (!selectedCardRank) selectedCardRank = RANKS[RANKS.length - 1];
 
-        if (selectedCardRank.id === 'EX') {
-          exPityCounter = 0; sPityCounter = 0; guaranteedExNext = false;
-        } else {
-          const rIdx = RANKS.findIndex(r => r.id === selectedCardRank.id);
-          const sIdx = RANKS.findIndex(r => r.id === 'S');
-          if (rIdx <= sIdx) sPityCounter = 0;
+        // Гарант как минимум ранга A (фиолетового) каждые 10 прыжков, если выпал мусор (белый)
+        if (aPityCounter >= 10 && RANK_TIERS[selectedCardRank.id] === 'white') {
+          selectedCardRank = RANKS.find(r => r.id === 'A');
         }
+      }
+
+      // Сброс счетчика гаранта на 10-крутку (сбрасывается, если выпал фиолетовый или золотой)
+      const tier = RANK_TIERS[selectedCardRank.id];
+      if (tier === 'gold' || tier === 'purple') {
+        aPityCounter = 0;
+      }
+
+      // Сброс счетчиков основного гаранта (S и EX)
+      if (selectedCardRank.id === 'EX') {
+        exPityCounter = 0; sPityCounter = 0; guaranteedExNext = false;
+      } else {
+        const rIdx = RANKS.findIndex(r => r.id === selectedCardRank.id);
+        const sIdx = RANKS.findIndex(r => r.id === 'S');
+        if (rIdx <= sIdx) sPityCounter = 0;
       }
 
       // Выбор случайной уникальной карты из пула соответствующего ранга
@@ -1031,7 +1042,7 @@
           videoSrc = 'effect/normal_x10.mp4';
           audioSrc = 'effect/normal_open.mp3';
         } else {
-          videoSrc = 'effect/standart_x1.mp4';
+          videoSrc = 'effect/standart_x10.mp4';
           audioSrc = 'effect/standart_open.mp3';
         }
       } else {
