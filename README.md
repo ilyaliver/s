@@ -1,6 +1,6 @@
 # s
 
-![Version](https://img.shields.io/badge/Version-Beta%20v0.0.3-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-Beta%20v0.0.3-blue?style=flat-square) ![Language](https://img.shields.io/badge/Language-Russian-00966B?style=for-the-badge)
 
 Gacha Simulator — браузерная интерактивная мини-игра «Поиск сигнальных прыжков» в стиле gacha/симулятора.
 
