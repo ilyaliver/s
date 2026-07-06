@@ -3,6 +3,7 @@
 Gacha Simulator — браузерная интерактивная мини-игра «Поиск сигнальных прыжков» в стиле gacha/симулятора.
 
 <img width="1426" height="733" alt="image" src="https://github.com/user-attachments/assets/ed57be8e-e15b-4ccb-95f4-0bc9b0ad0f78" />
+<img width="1426" height="733" alt="image" src="https://github.com/user-attachments/assets/a72226b8-739e-4efa-902a-3b1162e7e9af" />
 
 ## Кратко о проекте
 
