@@ -655,6 +655,11 @@
           <span class="font-bold text-slate-300 group-hover:text-white text-sm">Выдать все карты</span>
           <span class="text-[9px] font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg text-slate-400 group-hover:bg-[#d3bc8e] group-hover:text-[#121722] transition-colors">+1 каждая</span>
         </button>
+        <button id="btn-debug-max-all-cards"
+          class="mt-3 w-full bg-[#1a2130] border border-[#d3bc8e]/20 hover:border-[#d3bc8e] rounded-xl p-4 flex items-center justify-between group transition-all touch-active active:scale-[0.98]">
+          <span class="font-bold text-slate-300 group-hover:text-white text-sm">Прокачка карт</span>
+          <span class="text-[9px] font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg text-slate-400 group-hover:bg-[#d3bc8e] group-hover:text-[#121722] transition-colors">Максимум</span>
+        </button>
       </div>
       <div class="p-3 md:p-4 border-t border-[#d3bc8e]/20 flex justify-end bg-[#1a2130] md:rounded-b-2xl shrink-0">
         <button id="btn-ok-debug-cheats"
@@ -749,6 +754,7 @@
     const PULL_COST     = 160;
     const S_PITY_LIMIT  = 50;
     const EX_PITY_LIMIT = 90;
+    const MAXED_CARD_DROP_CHANCE = 0.000037;
 
     const SHOP_PACKAGES = [
       { id: 'pack1', amount: 120,   price: 0.99,  bonus: 0,    name: 'Факел Нова' },
@@ -1020,6 +1026,37 @@
       }
     }
 
+    function isCardMaxed(cardId) {
+      const card = inventory.find(c => c.cardId === cardId);
+      return !!card && card.constellation === 5 && card.level === 25;
+    }
+
+    function getAllCardTemplates() {
+      return Object.entries(UNIQUE_CARDS_POOL).flatMap(([rankId, cards]) => {
+        return cards.map(cardTemplate => ({ ...cardTemplate, rankId }));
+      });
+    }
+
+    function selectAvailableCardTemplate(rankId) {
+      const targetPool = UNIQUE_CARDS_POOL[rankId].map(cardTemplate => ({ ...cardTemplate, rankId }));
+      const maxedPool = targetPool.filter(cardTemplate => isCardMaxed(cardTemplate.cardId));
+      if (maxedPool.length > 0 && Math.random() < MAXED_CARD_DROP_CHANCE) {
+        return maxedPool[Math.floor(Math.random() * maxedPool.length)];
+      }
+
+      const availablePool = targetPool.filter(cardTemplate => !isCardMaxed(cardTemplate.cardId));
+      if (availablePool.length > 0) {
+        return availablePool[Math.floor(Math.random() * availablePool.length)];
+      }
+
+      const allAvailableCards = getAllCardTemplates().filter(cardTemplate => !isCardMaxed(cardTemplate.cardId));
+      if (allAvailableCards.length > 0) {
+        return allAvailableCards[Math.floor(Math.random() * allAvailableCards.length)];
+      }
+
+      return targetPool[Math.floor(Math.random() * targetPool.length)];
+    }
+
     function debugGrantAllCards() {
       const grantedCards = [];
       for (const rankId in UNIQUE_CARDS_POOL) {
@@ -1029,13 +1066,43 @@
         });
       }
       updateUI();
+      playDebugRewardSfx();
+      showResultModal(grantedCards);
+    }
+
+    function debugMaxAllCards() {
+      const maxedCards = [];
+      for (const rankId in UNIQUE_CARDS_POOL) {
+        UNIQUE_CARDS_POOL[rankId].forEach(cardTemplate => {
+          let card = inventory.find(c => c.cardId === cardTemplate.cardId);
+          if (!card) {
+            card = {
+              cardId: cardTemplate.cardId,
+              name: cardTemplate.name,
+              bgImage: cardTemplate.bgImage,
+              rankId: rankId,
+              level: 1,
+              constellation: 1
+            };
+            inventory.unshift(card);
+          }
+          card.level = 25;
+          card.constellation = 5;
+          maxedCards.push({ ...card });
+        });
+      }
+      updateUI();
+      playDebugRewardSfx();
+      showResultModal(maxedCards);
+    }
+
+    function playDebugRewardSfx() {
       if (currentSfx) {
         currentSfx.pause();
         currentSfx.currentTime = 0;
       }
       currentSfx = new Audio('effect/garant_open.mp3');
       currentSfx.play().catch(e => console.error("Audio play failed:", e));
-      showResultModal(grantedCards);
     }
 
     // --- МЕХАНИКА ТЯГИ ---
@@ -1092,15 +1159,14 @@
         if (rIdx <= sIdx) sPityCounter = 0;
       }
 
-      // Выбор случайной уникальной карты из пула соответствующего ранга
-      const targetPool = UNIQUE_CARDS_POOL[selectedCardRank.id];
-      const randomTemplate = targetPool[Math.floor(Math.random() * targetPool.length)];
+      // Выбор карты с учетом уже максимально прокачанных экземпляров
+      const randomTemplate = selectAvailableCardTemplate(selectedCardRank.id);
 
       return {
         cardId: randomTemplate.cardId,
         name: randomTemplate.name,
         bgImage: randomTemplate.bgImage,
-        rankId: selectedCardRank.id
+        rankId: randomTemplate.rankId
       };
     }
 
@@ -1406,6 +1472,7 @@
       modalDebugCheats.classList.remove('flex');
     });
     document.getElementById('btn-debug-grant-all-cards').addEventListener('click', debugGrantAllCards);
+    document.getElementById('btn-debug-max-all-cards').addEventListener('click', debugMaxAllCards);
 
     document.getElementById('btn-reset-save').addEventListener('click', resetProgress);
 
