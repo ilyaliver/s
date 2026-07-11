@@ -292,7 +292,7 @@
       <!-- Лого и Версия -->
       <div class="flex items-center gap-3 text-white drop-shadow-md shrink-0">
         <div class="flex flex-col">
-          <span class="text-xl md:text-3xl font-bold tracking-wide leading-none">Поиск</span>
+          <span id="secret-debug-trigger" class="text-xl md:text-3xl font-bold tracking-wide leading-none select-none">Поиск</span>
           <span class="text-[7px] md:text-[9px] font-mono tracking-wider select-none mt-1 animate-gradient-text" title="Приложение в стадии разработки, Beta-версия">Beta v0.0.5 mjsjvg14</span>
         </div>
         <div class="flex items-center gap-2">
@@ -479,7 +479,7 @@
   </div>
 
   <!-- ОВЕРЛЕЙ РЕЗУЛЬТАТА -->
-  <div id="modal-result" class="fixed inset-0 z-50 bg-[#080b10] flex flex-col items-center justify-between animate-fade-in hidden overflow-hidden modal-fullscreen" style="padding-top: max(1.5rem, env(safe-area-inset-top)); padding-bottom: max(1.5rem, env(safe-area-inset-bottom));">
+  <div id="modal-result" class="fixed inset-0 z-[110] bg-[#080b10] flex flex-col items-center justify-between animate-fade-in hidden overflow-hidden modal-fullscreen" style="padding-top: max(1.5rem, env(safe-area-inset-top)); padding-bottom: max(1.5rem, env(safe-area-inset-bottom));">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#1a1c2e] via-[#080b10] to-[#050608] z-0"></div>
     <div class="absolute inset-0 opacity-20 z-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
     
@@ -631,6 +631,37 @@
     <div class="text-center">
       <div class="w-10 h-10 md:w-12 md:h-12 border-4 border-[#d3bc8e]/30 border-t-[#d3bc8e] rounded-full animate-spin mx-auto mb-3"></div>
       <h2 class="text-xs font-bold tracking-widest uppercase text-[#4e5361]">Связь с сервером...</h2>
+    </div>
+  </div>
+
+  <!-- СЕКРЕТНОЕ МЕНЮ ДЕБАГА И ЧИТОВ -->
+  <div id="modal-debug-cheats" class="fixed inset-0 z-[90] bg-[#06080c]/95 hidden items-end md:items-center justify-center animate-fade-in">
+    <div class="bg-[#121722] border border-[#d3bc8e]/30 rounded-t-3xl md:rounded-2xl w-full max-w-2xl min-h-[220px] flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.8)] animate-slide-up"
+         style="padding-bottom: env(safe-area-inset-bottom, 0px)">
+      <button id="btn-close-debug-cheats"
+        class="absolute top-3 right-3 text-slate-400 hover:text-white z-10 p-2 transition-colors bg-white/5 rounded-full touch-active">
+        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <div class="bg-[#1a2130] border-b border-[#d3bc8e]/20 px-5 py-3 md:rounded-t-2xl shrink-0">
+        <h2 class="text-base font-bold uppercase tracking-widest text-[#ece5d8] flex items-center gap-3">
+          <span class="w-1.5 h-5 bg-[#d3bc8e] rounded-full"></span> Меню разработчика
+        </h2>
+      </div>
+      <div id="debug-cheats-content" class="flex-1 p-5 md:p-6">
+        <button id="btn-debug-grant-all-cards"
+          class="w-full bg-[#1a2130] border border-[#d3bc8e]/20 hover:border-[#d3bc8e] rounded-xl p-4 flex items-center justify-between group transition-all touch-active active:scale-[0.98]">
+          <span class="font-bold text-slate-300 group-hover:text-white text-sm">Выдать все карты</span>
+          <span class="text-[9px] font-bold uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-lg text-slate-400 group-hover:bg-[#d3bc8e] group-hover:text-[#121722] transition-colors">+1 каждая</span>
+        </button>
+      </div>
+      <div class="p-3 md:p-4 border-t border-[#d3bc8e]/20 flex justify-end bg-[#1a2130] md:rounded-b-2xl shrink-0">
+        <button id="btn-ok-debug-cheats"
+          class="bg-gradient-to-r from-[#ece5d8] to-[#d3bc8e] hover:brightness-110 text-slate-900 px-8 py-2.5 rounded-full font-black uppercase tracking-widest text-xs transition-all shadow-md touch-active">
+          ОК
+        </button>
+      </div>
     </div>
   </div>
 
@@ -989,6 +1020,24 @@
       }
     }
 
+    function debugGrantAllCards() {
+      const grantedCards = [];
+      for (const rankId in UNIQUE_CARDS_POOL) {
+        UNIQUE_CARDS_POOL[rankId].forEach(cardTemplate => {
+          const updatedState = registerCardToInventory({ ...cardTemplate, rankId });
+          grantedCards.push({ ...updatedState });
+        });
+      }
+      updateUI();
+      if (currentSfx) {
+        currentSfx.pause();
+        currentSfx.currentTime = 0;
+      }
+      currentSfx = new Audio('effect/garant_open.mp3');
+      currentSfx.play().catch(e => console.error("Audio play failed:", e));
+      showResultModal(grantedCards);
+    }
+
     // --- МЕХАНИКА ТЯГИ ---
     function pullSingleCard() {
       aPityCounter++;
@@ -1308,6 +1357,7 @@
     modalShop.addEventListener('click', e => { if (e.target === modalShop) closeShop(); });
     modalRules.addEventListener('click', e => { if (e.target === modalRules) document.getElementById('modal-rules').classList.add('hidden'); });
     modalAiCredits.addEventListener('click', e => { if (e.target === modalAiCredits) modalAiCredits.classList.add('hidden'); });
+    const modalDebugCheats = document.getElementById('modal-debug-cheats');
     
     // Закрытие нового окна приветствия
     const modalWelcome = document.getElementById('modal-welcome');
@@ -1337,6 +1387,25 @@
     // Открытие и закрытие информации об ИИ
     document.getElementById('btn-ai-credits').addEventListener('click', () => modalAiCredits.classList.remove('hidden'));
     document.getElementById('btn-close-ai-credits').addEventListener('click', () => modalAiCredits.classList.add('hidden'));
+
+    let secretDebugClicks = 0;
+    document.getElementById('secret-debug-trigger').addEventListener('click', () => {
+      secretDebugClicks += 1;
+      if (secretDebugClicks >= 20) {
+        secretDebugClicks = 0;
+        modalDebugCheats.classList.remove('hidden');
+        modalDebugCheats.classList.add('flex');
+      }
+    });
+    document.getElementById('btn-close-debug-cheats').addEventListener('click', () => {
+      modalDebugCheats.classList.add('hidden');
+      modalDebugCheats.classList.remove('flex');
+    });
+    document.getElementById('btn-ok-debug-cheats').addEventListener('click', () => {
+      modalDebugCheats.classList.add('hidden');
+      modalDebugCheats.classList.remove('flex');
+    });
+    document.getElementById('btn-debug-grant-all-cards').addEventListener('click', debugGrantAllCards);
 
     document.getElementById('btn-reset-save').addEventListener('click', resetProgress);
 
