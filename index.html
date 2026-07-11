@@ -226,7 +226,14 @@
 <body class="min-h-[100dvh] bg-gradient-to-br from-[#030712] via-[#0a1628] to-[#0d0a1a] text-slate-800 font-sans antialiased relative overflow-x-hidden selection:bg-amber-500/30 flex flex-col m-0">
 
   <!-- Аудиоэлемент для фоновой музыки -->
-  <audio id="bg-music" src="/mp3/sound2.mp3" autoplay loop></audio>
+  <audio id="bg-music" autoplay loop></audio>
+  <script>
+    const bgTracks = [
+      '/effect/Music_v7.0_ZD_BaiHuaXueZangDi_One_Z057(36200644).mp3',
+      '/effect/Music_v7.0_ZD_LuHuiQu_Two_Night_Z016(246884448).mp3'
+    ];
+    document.getElementById('bg-music').src = bgTracks[Math.floor(Math.random() * bgTracks.length)];
+  </script>
 
   <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
     <div class="stars-layer-1"></div>
@@ -268,7 +275,7 @@
       <div class="flex items-center gap-3 text-white drop-shadow-md shrink-0">
         <div class="flex flex-col">
           <span class="text-xl md:text-3xl font-bold tracking-wide leading-none">Поиск</span>
-          <span class="text-[7px] md:text-[9px] font-mono tracking-wider select-none mt-1 animate-gradient-text" title="Приложение в стадии разработки, Beta-версия">Beta v0.0.3 ojuws956</span>
+          <span class="text-[7px] md:text-[9px] font-mono tracking-wider select-none mt-1 animate-gradient-text" title="Приложение в стадии разработки, Beta-версия">Beta v0.0.5 mjsjvg14</span>
         </div>
         <div class="flex items-center gap-2">
           <div id="btn-banner-rules"
@@ -576,12 +583,14 @@
           <p class="text-xs text-slate-400 leading-relaxed">Проектирование пользовательского интерфейса, структуры и генерация CSS-кода выполнены моделью <strong class="text-slate-200">Gemini</strong>. Графические ассеты и прочие визуальные элементы были сгенерированы с использованием визуальной архитектуры <strong class="text-slate-200">Gemini (модель Nano Banana)</strong>, так же <strong class="text-slate-200">Grok (модель imagine)</strong></p>
         </div>
 
+        <!--
         <div class="bg-black/20 p-3 md:p-4 rounded-lg border border-white/5 shadow-inner">
           <h3 class="font-bold text-[#d3bc8e] mb-2 text-xs md:text-sm flex items-center gap-2">
             <span class="text-lg">🎵</span> Фоновое аудио-сопровождение
           </h3>
           <p class="text-xs text-slate-400 leading-relaxed">Атмосферная музыкальная композиция, воспроизводящаяся на фоне, полностью синтезирована с применением генеративных алгоритмов нейросети <strong class="text-slate-200">Suno.AI</strong>.</p>
         </div>
+        -->
 
         <div class="bg-black/20 p-3 md:p-4 rounded-lg border border-white/5 shadow-inner">
           <h3 class="font-bold text-[#d3bc8e] mb-2 text-xs md:text-sm flex items-center gap-2">
