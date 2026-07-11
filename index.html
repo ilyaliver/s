@@ -228,8 +228,9 @@
   <!-- Аудиоэлемент для фоновой музыки -->
   <audio id="bg-music" autoplay loop></audio>
   <div id="track-toast" class="fixed right-4 top-[calc(3.75rem+var(--safe-top))] md:top-[calc(4.25rem+var(--safe-top))] z-50 flex max-w-[calc(100vw-2rem)] items-center gap-3 rounded-lg border border-cyan-300/25 bg-slate-950/80 px-3 py-2 text-cyan-50 shadow-lg shadow-cyan-950/30 backdrop-blur-md">
-    <a href="https://www.youtube.com/@HOYOMiX" target="_blank" rel="noopener noreferrer" class="text-xs font-medium tracking-wide transition hover:text-cyan-200" title="Открыть автора музыки">
-      <span id="track-title"></span>
+    <a href="https://www.youtube.com/@HOYOMiX" target="_blank" rel="noopener noreferrer" class="flex flex-col transition hover:text-cyan-200" title="Открыть автора музыки">
+      <span class="text-[9px] uppercase tracking-[0.18em] text-cyan-200/60">Leaks Beta Version Game Music</span>
+      <span id="track-title" class="text-xs font-medium tracking-wide"></span>
     </a>
     <button id="track-toast-close" type="button" class="flex h-6 w-6 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-white" aria-label="Закрыть название композиции">&times;</button>
   </div>
@@ -237,11 +238,11 @@
     const bgTracks = [
       {
         src: '/effect/Music_v7.0_ZD_BaiHuaXueZangDi_One_Z057(36200644).mp3',
-        title: 'BaiHuaXueZangDi - One'
+        title: 'HOYOMiX - BaiHuaXueZangDi - One'
       },
       {
         src: '/effect/Music_v7.0_ZD_LuHuiQu_Two_Night_Z016(246884448).mp3',
-        title: 'LuHuiQu - Two Night'
+        title: 'HOYOMiX - LuHuiQu - Two Night'
       }
     ];
     const selectedTrack = bgTracks[Math.floor(Math.random() * bgTracks.length)];
